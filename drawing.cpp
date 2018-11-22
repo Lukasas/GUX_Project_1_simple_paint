@@ -1,35 +1,5 @@
 #include "drawing.h"
 
-int x1 = 0, x2 = 100, y1 = 0, y2 = 100;
-
-void InputLineEH(Widget w, XtPointer client_data, XEvent *event, Boolean *cont)
-{
-    Pixel	fg, bg;
-	GC inputGC = NULL;
-    if (true) {
-	if (!inputGC) {
-	    inputGC = XCreateGC(XtDisplay(w), XtWindow(w), 0, NULL);
-	    /*XSetFunction(XtDisplay(w), inputGC, GXxor);
-	    XSetPlaneMask(XtDisplay(w), inputGC, ~0);
-	    XtVaGetValues(w, XmNforeground, &fg, XmNbackground, &bg, NULL);
-	    XSetForeground(XtDisplay(w), inputGC, fg ^ bg);*/
-	}
-
-	/*if (button_pressed > 1) {
-
-	    XDrawLine(XtDisplay(w), XtWindow(w), inputGC, x1, y1, x2, y2);
-	} else {
-
-	    //button_pressed = 2;
-	}*/
-
-	x2 = event->xmotion.x;
-	y2 = event->xmotion.y;
-
-	XDrawLine(XtDisplay(w), XtWindow(w), inputGC, x1, y1, x2, y2);
-    }
-}
-
 Drawing::Drawing(Widget w) : c(new Controller<Drawing>())
 {
     Pixel	fg, bg;
