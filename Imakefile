@@ -1,0 +1,13 @@
+
+#include <Motif.tmpl>
+#include <Motif.rules>
+
+CC=g++
+CCOPTIONS=-O -Wall -fno-builtin mywindow.cpp drawing.cpp controller.cpp
+CDEBUGFLAGS=-g
+LOCAL_LIBRARIES = XmClientLibs
+
+MSimpleProgramTarget(main)
+clean::
+	$(RM) Makefile
+
