@@ -1,6 +1,6 @@
 #include "mywindow.h"
 
-MyWindow::MyWindow(int argc, char *argv[])
+MyWindow::MyWindow(int argc, char *argv[]) : c(new Controller<MyWindow>())
 {
 	XtSetLanguageProc(NULL, (XtLanguageProc)NULL, NULL);
 
@@ -32,6 +32,8 @@ MyWindow::~MyWindow()
 {
 	if (g)
 		delete g;
+
+	delete c;
 }
 
 void MyWindow::InitializeDrawing()
@@ -64,4 +66,13 @@ void MyWindow::InitComponents()
 		XmNpacking, XmPACK_COLUMN,
 		NULL
 	);
+
+	m_btnQuit = XtVaCreateManagedWidget(
+		"Quit",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+
+	//c->RegisterEventHandler(this, m_btnQuit, ButtonMotionMask, False, , NULL);
 }

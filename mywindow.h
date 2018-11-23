@@ -30,6 +30,7 @@ private:
 	Widget m_btnClear;
 
 	Drawing *g = NULL;
+	Controller<MyWindow> *c;
 public:
 	MyWindow(int, char*[]);
 
