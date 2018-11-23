@@ -15,6 +15,7 @@
 #include <Xm/DrawingA.h>
 #include <Xm/RowColumn.h>
 
+#include <cstdlib>
 #include "drawing.h"
 
 class MyWindow
@@ -39,6 +40,8 @@ public:
 	void InitializeDrawing();
 
 	void RunLoop();
+
+	void QuitButton(Widget w, XtPointer user_data, XtPointer call_data);
 
 	virtual ~MyWindow();
 };

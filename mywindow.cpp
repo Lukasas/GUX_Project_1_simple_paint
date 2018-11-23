@@ -67,12 +67,19 @@ void MyWindow::InitComponents()
 		NULL
 	);
 
-	m_btnQuit = XtVaCreateManagedWidget(
+    m_btnQuit = XtVaCreateManagedWidget(
 		"Quit",
 		xmPushButtonWidgetClass,
 		m_rowColumn,
 		NULL
 	);
 
-	//c->RegisterEventHandler(this, m_btnQuit, ButtonMotionMask, False, , NULL);
+	XmMainWindowSetAreas(m_mainWindow, NULL, m_rowColumn, NULL, NULL, m_frame);
+
+	c->RegisterCallback(this, m_btnQuit, XmNactivateCallback, &MyWindow::QuitButton, NULL);
+
+}
+void MyWindow::QuitButton(Widget w, XtPointer user_data, XtPointer call_data)
+{
+	exit(0);
 }

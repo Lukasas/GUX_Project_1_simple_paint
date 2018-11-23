@@ -26,7 +26,6 @@ void Drawing::DrawLine(int x1, int y1, int x2, int y2)
 
 void Drawing::MyExpose(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	//DrawLine(0, 0, 100, 100);
 	XCopyArea (XtDisplay(widget), bmp, XtWindow(widget), m_gc, 0, 0, 800, 600, 0, 0);
 }
 
