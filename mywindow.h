@@ -32,6 +32,14 @@ private:
 	Widget m_btnQuit;
 	Widget m_btnClear;
 
+	enum DrawingTools
+	{
+		Line,
+		Pixel,
+		Rect,
+		FillRect
+	};
+
 	Drawing *g = NULL;
 	Controller<MyWindow> *c;
 

@@ -135,10 +135,10 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, B
 {
 	int x = event->xmotion.x;
 	int y = event->xmotion.y;
-	//g->DrawLine(m_mouse_start_x, m_mouse_start_y, event->xmotion.x, event->xmotion.y);
 	// g->DrawPoint(x, y);
-	// g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
+	//g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
 	g->FillRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
+	//g->DrawRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
 }
 
 void MyWindow::ClearButton(Widget widget, XtPointer user_data, XtPointer call_data)

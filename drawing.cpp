@@ -23,6 +23,7 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 
 
 	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 0, 800, 600);
+	// XSetLineAttributes(XtDisplay(m_drawingArea), m_gc, 1, Line, 0, 0);
 	SetPenColor(1, 0, 0);
 	// XDrawLine(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 200, 200, 200);
 	// XFillRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, 0, 0, 0, 0);
@@ -72,6 +73,7 @@ void Drawing::DrawPoint(int x, int y)
 void Drawing::DrawRectangle(int x1, int y1, int x2, int y2)
 {
 	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	// this buggs out on negative width and height
 	XDrawRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
 	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
@@ -113,5 +115,7 @@ void Drawing::MyResize(Widget widget, XtPointer user_data, XtPointer call_data)
 
 Drawing::~Drawing()
 {
+	XFreePixmap(XtDisplay(m_drawingArea), m_base);
+	XFreePixmap(XtDisplay(m_drawingArea), m_bmp);
 	XFreeGC(XtDisplay(m_drawingArea), m_gc);
 }
