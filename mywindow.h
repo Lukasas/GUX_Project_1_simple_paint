@@ -41,7 +41,10 @@ public:
 
 	void RunLoop();
 
+	void ClearButton(Widget w, XtPointer user_data, XtPointer call_data);
 	void QuitButton(Widget w, XtPointer user_data, XtPointer call_data);
+
+	void ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont);
 
 	virtual ~MyWindow();
 };

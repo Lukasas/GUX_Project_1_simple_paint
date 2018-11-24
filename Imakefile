@@ -3,7 +3,7 @@
 #include <Motif.rules>
 
 CC=g++
-CCOPTIONS=-O -Wall -fno-builtin mywindow.cpp drawing.cpp controller.cpp
+CCOPTIONS=-O -Wall -fno-builtin mywindow.cpp drawing.cpp
 CDEBUGFLAGS=-g
 LOCAL_LIBRARIES = XmClientLibs
 

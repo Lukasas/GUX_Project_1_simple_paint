@@ -67,6 +67,13 @@ void MyWindow::InitComponents()
 		NULL
 	);
 
+    m_btnClear = XtVaCreateManagedWidget(
+		"Clear",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+
     m_btnQuit = XtVaCreateManagedWidget(
 		"Quit",
 		xmPushButtonWidgetClass,
@@ -76,9 +83,23 @@ void MyWindow::InitComponents()
 
 	XmMainWindowSetAreas(m_mainWindow, NULL, m_rowColumn, NULL, NULL, m_frame);
 
+	c->RegisterCallback(this, m_btnClear, XmNactivateCallback, &MyWindow::ClearButton, NULL);
 	c->RegisterCallback(this, m_btnQuit, XmNactivateCallback, &MyWindow::QuitButton, NULL);
 
+	c->RegisterEventHandler(this, m_drawingArea, ButtonMotionMask, False, &MyWindow::ButtonEvent, NULL);
+
 }
+
+void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont)
+{
+	g->DrawLine(10, 10, event->xmotion.x, event->xmotion.y);
+}
+
+void MyWindow::ClearButton(Widget w, XtPointer user_data, XtPointer call_data)
+{
+	g->Clear();
+}
+
 void MyWindow::QuitButton(Widget w, XtPointer user_data, XtPointer call_data)
 {
 	exit(0);
