@@ -2,7 +2,6 @@
 
 Drawing::Drawing(Widget w) : c(new Controller<Drawing>())
 {
-    Pixel	fg, bg;
 	m_drawingArea = w;
 	m_gc = XCreateGC(XtDisplay(w), RootWindowOfScreen(XtScreen(w)), 0, NULL);
 
@@ -26,6 +25,8 @@ Drawing::Drawing(Widget w) : c(new Controller<Drawing>())
 
 void Drawing::SetPenColor()
 {
+    Pixel	fg, bg;
+
 	XColor xcolour;
 
 	Colormap cmap = DefaultColormapOfScreen(XtScreen(m_drawingArea));
@@ -34,9 +35,14 @@ void Drawing::SetPenColor()
 	xcolour.red = 65535; xcolour.green = 0; xcolour.blue = 0;
 	xcolour.flags = DoRed | DoGreen | DoBlue;
 	XAllocColor(XtDisplay(m_drawingArea), cmap, &xcolour);
-
+/*
 	XSetForeground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel);
 	XSetBackground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel);
+*/
+	XSetFunction(XtDisplay(m_drawingArea), m_gc, GXxor);
+	XSetPlaneMask(XtDisplay(m_drawingArea), m_gc, ~0);
+	XtVaGetValues(m_drawingArea, XmNforeground, &fg, XmNbackground, &bg, NULL);
+	XSetForeground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel ^ bg);
 	// Free Color
 }
 
@@ -45,12 +51,21 @@ void Drawing::SetBrushColor()
 
 }
 
+int a = -1, b, e, d;
+
 void Drawing::DrawLine(int x1, int y1, int x2, int y2)
 {
 	//SetPenColor();
 	// XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, x1, y1, x2, y2);
+	if (a >= 0)
+		XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, a, b, e, d);
 	XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, x1, y1, x2, y2);
+
 	XDrawLine(XtDisplay(m_drawingArea), bmp, m_gc, x1, y1, x2, y2);
+	a = x1;
+	b = y1;
+	e = x2;
+	d = y2;
 }
 
 void Drawing::Clear()
