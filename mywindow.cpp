@@ -115,15 +115,19 @@ void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call
 {
 	XmDrawingAreaCallbackStruct *ds = (XmDrawingAreaCallbackStruct*)call_data;
 	XButtonEvent * be = (XButtonEvent*)ds->event;
-	if (be->type == ButtonPress)
+
+	if (be->button == Button1)
 	{
-		m_mouse_start_x = be->x,
-		m_mouse_start_y = be->y;
+		if (be->type == ButtonPress)
+		{
+			m_mouse_start_x = be->x,
+			m_mouse_start_y = be->y;
+		}
+
+
+		if (be->type == ButtonRelease)
+			g->ToolDone();
 	}
-
-
-	if (be->type == ButtonRelease)
-		g->ToolDone();
 
 }
 

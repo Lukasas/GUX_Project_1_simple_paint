@@ -39,6 +39,7 @@ void Drawing::SetPenColor(float R, float G, float B)
 	XAllocColor(XtDisplay(m_drawingArea), m_colMap, &m_xcol);
 
 	XSetForeground(XtDisplay(m_drawingArea), m_gc, m_xcol.pixel);
+	XFreeColors(XtDisplay(m_drawingArea), m_colMap, &m_xcol.pixel, 1, 0);
 }
 
 void Drawing::SetBrushColor(float R, float G, float B)
@@ -52,6 +53,7 @@ void Drawing::SetBrushColor(float R, float G, float B)
 	XAllocColor(XtDisplay(m_drawingArea), m_colMap, &m_xcol);
 
 	XSetBackground(XtDisplay(m_drawingArea), m_gc, m_xcol.pixel);
+	XFreeColors(XtDisplay(m_drawingArea), m_colMap, &m_xcol.pixel, 1, 0);
 }
 
 void Drawing::DrawLine(int x1, int y1, int x2, int y2)
