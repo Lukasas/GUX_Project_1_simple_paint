@@ -9,6 +9,7 @@ class Drawing
 private:
 	Widget m_drawingArea;
 	GC m_gc;
+	Pixmap base;
 	Pixmap bmp;
 	Controller<Drawing> *c;
 	int width;
@@ -21,6 +22,7 @@ public:
 	void DrawLine(int, int, int, int);
 	void Clear();
 
+	void ToolDone(); // This must be called on mouse up.
 
 	void MyExpose(Widget, XtPointer, XtPointer);
 	void MyResize(Widget, XtPointer, XtPointer);

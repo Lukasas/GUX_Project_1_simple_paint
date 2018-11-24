@@ -59,6 +59,12 @@ void Drawing::Clear()
 	XFillRectangle(XtDisplay(m_drawingArea), bmp, m_gc, 0, 0, 0, 0);
 }
 
+void Drawing::ToolDone()
+{
+	// Copy bmp into base
+	// base will be the whole picture
+}
+
 void Drawing::MyExpose(Widget widget, XtPointer user_data, XtPointer call_data)
 {
 	DrawLine(0, 100, 100, 100);
