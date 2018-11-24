@@ -1,89 +1,105 @@
 #include "drawing.h"
 
-Drawing::Drawing(Widget w) : c(new Controller<Drawing>())
+Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 {
 	m_drawingArea = w;
-	m_gc = XCreateGC(XtDisplay(w), RootWindowOfScreen(XtScreen(w)), 0, NULL);
+	m_gc = XCreateGC(XtDisplay(w), RootWindowOfScreen(XtScreen(m_drawingArea)), 0, NULL);
+	m_colMap = DefaultColormapOfScreen(XtScreen(m_drawingArea));
 
-	c->RegisterCallback(this, m_drawingArea, XmNexposeCallback, &Drawing::MyExpose, NULL);
-	c->RegisterCallback(this, m_drawingArea, XmNresizeCallback, &Drawing::MyResize, NULL);
+	m_c->RegisterCallback(this, m_drawingArea, XmNexposeCallback, &Drawing::MyExpose, NULL);
+	m_c->RegisterCallback(this, m_drawingArea, XmNresizeCallback, &Drawing::MyResize, NULL);
 
 
-	SetPenColor();
-	bmp = XCreatePixmap (XtDisplay (m_drawingArea),
-                            RootWindowOfScreen (XtScreen (m_drawingArea)),
+	m_bmp = XCreatePixmap (XtDisplay (m_drawingArea),
+                            RootWindowOfScreen(XtScreen(m_drawingArea)),
                             800, 600,
-                            DefaultDepthOfScreen (XtScreen (m_drawingArea)));
+                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));
+	m_base = XCreatePixmap (XtDisplay (m_drawingArea),
+                            RootWindowOfScreen(XtScreen(m_drawingArea)),
+                            800, 600,
+                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));
 
     /* clear pixmap with white */
 
 
-	XDrawLine(XtDisplay(m_drawingArea), bmp, m_gc, 0, 200, 200, 200);
-	XFillRectangle (XtDisplay (m_drawingArea), bmp, m_gc, 0, 0, 0, 0);
+	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 0, 800, 600);
+	SetPenColor(1, 0, 0);
+	// XDrawLine(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 200, 200, 200);
+	// XFillRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, 0, 0, 0, 0);
 
 }
 
-void Drawing::SetPenColor()
+void Drawing::SetPenColor(float R, float G, float B)
 {
-    Pixel	fg, bg;
+	// I guess XParseColor will work here
+	m_xcol.red = 65535 * R;
+	m_xcol.green = 65535 * G;
+	m_xcol.blue = 65535 * B;
+	m_xcol.flags = DoRed | DoGreen | DoBlue;
+	XAllocColor(XtDisplay(m_drawingArea), m_colMap, &m_xcol);
 
-	XColor xcolour;
+	XSetForeground(XtDisplay(m_drawingArea), m_gc, m_xcol.pixel);
+}
 
-	Colormap cmap = DefaultColormapOfScreen(XtScreen(m_drawingArea));
+void Drawing::SetBrushColor(float R, float G, float B)
+{
 
 	// I guess XParseColor will work here
-	xcolour.red = 65535; xcolour.green = 0; xcolour.blue = 0;
-	xcolour.flags = DoRed | DoGreen | DoBlue;
-	XAllocColor(XtDisplay(m_drawingArea), cmap, &xcolour);
-/*
-	XSetForeground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel);
-	XSetBackground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel);
-*/
-	XSetFunction(XtDisplay(m_drawingArea), m_gc, GXxor);
-	XSetPlaneMask(XtDisplay(m_drawingArea), m_gc, ~0);
-	XtVaGetValues(m_drawingArea, XmNforeground, &fg, XmNbackground, &bg, NULL);
-	XSetForeground(XtDisplay(m_drawingArea), m_gc, xcolour.pixel ^ bg);
-	// Free Color
+	m_xcol.red = 65535 * R;
+	m_xcol.green = 65535 * G;
+	m_xcol.blue = 65535 * B;
+	m_xcol.flags = DoRed | DoGreen | DoBlue;
+	XAllocColor(XtDisplay(m_drawingArea), m_colMap, &m_xcol);
+
+	XSetBackground(XtDisplay(m_drawingArea), m_gc, m_xcol.pixel);
 }
-
-void Drawing::SetBrushColor()
-{
-
-}
-
-int a = -1, b, e, d;
 
 void Drawing::DrawLine(int x1, int y1, int x2, int y2)
 {
-	//SetPenColor();
-	// XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, x1, y1, x2, y2);
-	if (a >= 0)
-		XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, a, b, e, d);
-	XDrawLine(XtDisplay(m_drawingArea), XtWindow(m_drawingArea), m_gc, x1, y1, x2, y2);
+	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XDrawLine(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2, y2);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+}
 
-	XDrawLine(XtDisplay(m_drawingArea), bmp, m_gc, x1, y1, x2, y2);
-	a = x1;
-	b = y1;
-	e = x2;
-	d = y2;
+void Drawing::DrawPoint(int x, int y)
+{
+	XDrawPoint(XtDisplay(m_drawingArea), m_bmp, m_gc, x, y);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+}
+
+void Drawing::DrawRectangle(int x1, int y1, int x2, int y2)
+{
+	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XDrawRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+}
+
+void Drawing::FillRectangle(int x1, int y1, int x2, int y2)
+{
+	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XFillRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
 
 void Drawing::Clear()
 {
 	//XClearWindow(XtDisplay(m_drawingArea), XtWindow(m_drawingArea));
-	XFillRectangle(XtDisplay(m_drawingArea), bmp, m_gc, 0, 0, 0, 0);
+	SetPenColor(0, 0, 0);
+	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, 800, 600);
+	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
 
 void Drawing::ToolDone()
 {
-	// Copy bmp into base
-	// base will be the whole picture
+	// Copy m_bmp into m_base
+	// m_base will be the whole picture
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, m_base, m_gc, 0, 0, 800, 600, 0, 0);
 }
 
 void Drawing::MyExpose(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	DrawLine(0, 100, 100, 100);
-	XCopyArea (XtDisplay(widget), bmp, XtWindow(widget), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea (XtDisplay(widget), m_base, XtWindow(widget), m_gc, 0, 0, 800, 600, 0, 0);
 }
 
 

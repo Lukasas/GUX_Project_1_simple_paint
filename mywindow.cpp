@@ -67,6 +67,26 @@ void MyWindow::InitComponents()
 		NULL
 	);
 
+	// m_rowColumn_1 = XtVaCreateManagedWidget(
+	// 	"rowColumn",
+	// 	xmRowColumnWidgetClass,
+	// 	m_rowColumn,
+	// 	XmNentryAlignment, XmALIGNMENT_CENTER,
+	// 	XmNorientation, XmHORIZONTAL,
+	// 	XmNpacking, XmPACK_COLUMN,
+	// 	NULL
+	// );
+
+	// m_rowColumn_2 = XtVaCreateManagedWidget(
+	// 	"rowColumn",
+	// 	xmRowColumnWidgetClass,
+	// 	m_rowColumn,
+	// 	XmNentryAlignment, XmALIGNMENT_CENTER,
+	// 	XmNorientation, XmHORIZONTAL,
+	// 	XmNpacking, XmPACK_COLUMN,
+	// 	NULL
+	// );
+
     m_btnClear = XtVaCreateManagedWidget(
 		"Clear",
 		xmPushButtonWidgetClass,
@@ -86,21 +106,43 @@ void MyWindow::InitComponents()
 	c->RegisterCallback(this, m_btnClear, XmNactivateCallback, &MyWindow::ClearButton, NULL);
 	c->RegisterCallback(this, m_btnQuit, XmNactivateCallback, &MyWindow::QuitButton, NULL);
 
+	c->RegisterCallback(this, m_drawingArea, XmNinputCallback, &MyWindow::ButtonCallTest, NULL);
 	c->RegisterEventHandler(this, m_drawingArea, ButtonMotionMask, False, &MyWindow::ButtonEvent, NULL);
+
+}
+
+void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call_data)
+{
+	XmDrawingAreaCallbackStruct *ds = (XmDrawingAreaCallbackStruct*)call_data;
+	XButtonEvent * be = (XButtonEvent*)ds->event;
+	if (be->type == ButtonPress)
+	{
+		m_mouse_start_x = be->x,
+		m_mouse_start_y = be->y;
+	}
+
+
+	if (be->type == ButtonRelease)
+		g->ToolDone();
 
 }
 
 void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont)
 {
-	g->DrawLine(10, 10, event->xmotion.x, event->xmotion.y);
+	int x = event->xmotion.x;
+	int y = event->xmotion.y;
+	//g->DrawLine(m_mouse_start_x, m_mouse_start_y, event->xmotion.x, event->xmotion.y);
+	// g->DrawPoint(x, y);
+	// g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
+	g->FillRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
 }
 
-void MyWindow::ClearButton(Widget w, XtPointer user_data, XtPointer call_data)
+void MyWindow::ClearButton(Widget widget, XtPointer user_data, XtPointer call_data)
 {
 	g->Clear();
 }
 
-void MyWindow::QuitButton(Widget w, XtPointer user_data, XtPointer call_data)
+void MyWindow::QuitButton(Widget widget, XtPointer user_data, XtPointer call_data)
 {
 	exit(0);
 }

@@ -27,11 +27,17 @@ private:
 	Widget m_frame;
 	Widget m_drawingArea;
 	Widget m_rowColumn;
+	Widget m_rowColumn_1;
+	Widget m_rowColumn_2;
 	Widget m_btnQuit;
 	Widget m_btnClear;
 
 	Drawing *g = NULL;
 	Controller<MyWindow> *c;
+
+
+	int m_mouse_start_x;
+	int m_mouse_start_y;
 public:
 	MyWindow(int, char*[]);
 
@@ -41,9 +47,10 @@ public:
 
 	void RunLoop();
 
-	void ClearButton(Widget w, XtPointer user_data, XtPointer call_data);
-	void QuitButton(Widget w, XtPointer user_data, XtPointer call_data);
+	void ClearButton(Widget widget, XtPointer user_data, XtPointer call_data);
+	void QuitButton(Widget widget, XtPointer user_data, XtPointer call_data);
 
+	void ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call_data);
 	void ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont);
 
 	virtual ~MyWindow();
