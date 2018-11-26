@@ -17,6 +17,8 @@ private:
 
 	XColor m_xcol;
 	Colormap m_colMap;
+
+	void FixRectCoords(int &,int &,int &,int &);
 public:
 	Drawing(Widget);
 

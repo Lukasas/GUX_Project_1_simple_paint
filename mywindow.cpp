@@ -87,6 +87,35 @@ void MyWindow::InitComponents()
 	// 	NULL
 	// );
 
+
+
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"R",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff0000);
+
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"G",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff00);
+
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"B",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff);
+
     m_btnClear = XtVaCreateManagedWidget(
 		"Clear",
 		xmPushButtonWidgetClass,
@@ -139,6 +168,18 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, B
 	//g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
 	g->FillRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
 	//g->DrawRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
+}
+
+void MyWindow::BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data)
+{
+	int *parser = (int*)user_data;
+	long long aa = (long long)parser;
+	float R = ((aa & 0xFF0000) >> 16) / 0xFF;
+	float G = ((aa & 0xFF00) >> 8) / 0xFF;
+	float B = (aa & 0xFF) / 0xFF;
+
+	g->SetPenColor(R, G, B);
+
 }
 
 void MyWindow::ClearButton(Widget widget, XtPointer user_data, XtPointer call_data)

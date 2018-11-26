@@ -31,6 +31,8 @@ private:
 	Widget m_rowColumn_2;
 	Widget m_btnQuit;
 	Widget m_btnClear;
+	Widget m_btnColor;
+
 
 	enum DrawingTools
 	{
@@ -46,6 +48,7 @@ private:
 
 	int m_mouse_start_x;
 	int m_mouse_start_y;
+
 public:
 	MyWindow(int, char*[]);
 
@@ -60,6 +63,8 @@ public:
 
 	void ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call_data);
 	void ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont);
+
+	void BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data);
 
 	virtual ~MyWindow();
 };

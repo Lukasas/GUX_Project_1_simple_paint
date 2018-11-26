@@ -21,12 +21,14 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 
     /* clear pixmap with white */
 
+	SetPenColor(0, 0, 0);
 
 	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 0, 800, 600);
+	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, 800, 600);
+	XCopyArea (XtDisplay(m_drawingArea), m_bmp, RootWindowOfScreen(XtScreen(m_drawingArea)), m_gc, 0, 0, 800, 600, 0, 0);
+
 	// XSetLineAttributes(XtDisplay(m_drawingArea), m_gc, 1, Line, 0, 0);
 	SetPenColor(1, 0, 0);
-	// XDrawLine(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 200, 200, 200);
-	// XFillRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, 0, 0, 0, 0);
 
 }
 
@@ -70,10 +72,29 @@ void Drawing::DrawPoint(int x, int y)
 	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
 
+void Drawing::FixRectCoords(int& x1, int& y1, int& x2, int& y2)
+{
+	int temp;
+	if (x1 >= x2)
+	{
+		temp = x1;
+		x1 = x2;
+		x2 = temp;
+	}
+
+	if (y1 >= y2)
+	{
+		temp = y1;
+		y1 = y2;
+		y2 = temp;
+	}
+}
+
 void Drawing::DrawRectangle(int x1, int y1, int x2, int y2)
 {
 	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
 	// this buggs out on negative width and height
+	FixRectCoords(x1, y1, x2, y2);
 	XDrawRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
 	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
@@ -81,6 +102,7 @@ void Drawing::DrawRectangle(int x1, int y1, int x2, int y2)
 void Drawing::FillRectangle(int x1, int y1, int x2, int y2)
 {
 	XCopyArea (XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	FixRectCoords(x1, y1, x2, y2);
 	XFillRectangle (XtDisplay (m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
 	XCopyArea (XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
 }
