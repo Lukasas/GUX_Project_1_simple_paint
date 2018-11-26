@@ -29,8 +29,9 @@ private:
 	Widget m_frame;
 	Widget m_drawingArea;
 	Widget m_rowColumn;
-	Widget m_rowColumn_1;
-	Widget m_rowColumn_2;
+	Widget m_rowColumn_1_colors;
+	Widget m_rowColumn_2_tools;
+	Widget m_rowColumn_3_bar;
 	Widget m_btnQuit;
 	Widget m_btnClear;
 	Widget m_btnColor;
@@ -40,7 +41,6 @@ private:
 
 	Drawing *g = NULL;
 	Controller<MyWindow> *c;
-
 
 	int m_mouse_start_x;
 	int m_mouse_start_y;

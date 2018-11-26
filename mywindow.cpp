@@ -6,12 +6,12 @@ MyWindow::MyWindow(int argc, char *argv[]) : c(new Controller<MyWindow>())
 
 	// Closing question
 	char *fall[] = {
-		"*question.dialogTitle: Malá otázka",
-		"*question.messageString: Konec aplikace?",
-		"*question.okLabelString: Ano",
-		"*question.cancelLabelString: Ne",
+		"*question.dialogTitle: Quitting",
+		"*question.messageString: Are you sure you would like to exit?",
+		"*question.okLabelString: Yes",
+		"*question.cancelLabelString: No",
 		"*question.messageAlignment: XmALIGNMENT_CENTER",
-		NULL};
+		0};
 
 	m_topLevel = XtVaAppInitialize(
 		&m_appContext,
@@ -93,117 +93,127 @@ void MyWindow::InitComponents()
 		xmRowColumnWidgetClass,
 		m_mainWindow,
 		XmNentryAlignment, XmALIGNMENT_CENTER,
-		XmNorientation, XmHORIZONTAL,
+		XmNorientation, XmVERTICAL,
 		XmNpacking, XmPACK_COLUMN,
 		NULL);
 
-	// m_rowColumn_1 = XtVaCreateManagedWidget(
-	// 	"rowColumn",
-	// 	xmRowColumnWidgetClass,
-	// 	m_rowColumn,
-	// 	XmNentryAlignment, XmALIGNMENT_CENTER,
-	// 	XmNorientation, XmHORIZONTAL,
-	// 	XmNpacking, XmPACK_COLUMN,
-	// 	NULL
-	// );
+	m_rowColumn_1_colors = XtVaCreateManagedWidget(
+		"rowColumn",
+		xmRowColumnWidgetClass,
+		m_rowColumn,
+		XmNentryAlignment, XmALIGNMENT_CENTER,
+		XmNorientation, XmHORIZONTAL,
+		XmNpacking, XmPACK_COLUMN,
+		NULL
+	);
 
-	// m_rowColumn_2 = XtVaCreateManagedWidget(
-	// 	"rowColumn",
-	// 	xmRowColumnWidgetClass,
-	// 	m_rowColumn,
-	// 	XmNentryAlignment, XmALIGNMENT_CENTER,
-	// 	XmNorientation, XmHORIZONTAL,
-	// 	XmNpacking, XmPACK_COLUMN,
-	// 	NULL
-	// );
+	m_rowColumn_2_tools = XtVaCreateManagedWidget(
+		"rowColumn",
+		xmRowColumnWidgetClass,
+		m_rowColumn,
+		XmNentryAlignment, XmALIGNMENT_CENTER,
+		XmNorientation, XmHORIZONTAL,
+		XmNpacking, XmPACK_COLUMN,
+		NULL
+	);
+
+	m_rowColumn_3_bar = XtVaCreateManagedWidget(
+		"rowColumn",
+		xmRowColumnWidgetClass,
+		m_rowColumn,
+		XmNentryAlignment, XmALIGNMENT_CENTER,
+		XmNorientation, XmHORIZONTAL,
+		XmNpacking, XmPACK_COLUMN,
+		NULL
+	);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Red",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_1_colors,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff0000);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Green",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_1_colors,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff00);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Blue",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_1_colors,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Black",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_1_colors,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0x0);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"White",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_1_colors,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xffffff);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Line",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tLine);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Rect",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tRect);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Point",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tPoint);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Ellipse",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tEllipse);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Fill",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)1);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"No Fill",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_2_tools,
 		NULL);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)0);
 
 	m_btnClear = XtVaCreateManagedWidget(
 		"Clear",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_3_bar,
 		NULL);
 
 	m_btnQuit = XtVaCreateManagedWidget(
 		"Quit",
 		xmPushButtonWidgetClass,
-		m_rowColumn,
+		m_rowColumn_3_bar,
 		NULL);
 
 	XmMainWindowSetAreas(m_mainWindow, NULL, m_rowColumn, NULL, NULL, m_frame);
