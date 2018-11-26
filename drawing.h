@@ -27,8 +27,10 @@ public:
 	void DrawLine(int, int, int, int);
 	void DrawPoint(int, int);
 	void DrawRectangle(int, int, int, int);
+	void DrawEllipse(int, int, int, int);
 
 	void FillRectangle(int, int, int, int);
+	void FillEllipse(int, int, int, int);
 
 	void Clear();
 

@@ -33,15 +33,6 @@ private:
 	Widget m_btnClear;
 	Widget m_btnColor;
 
-
-	enum DrawingTools
-	{
-		Line,
-		Pixel,
-		Rect,
-		FillRect
-	};
-
 	Drawing *g = NULL;
 	Controller<MyWindow> *c;
 
@@ -49,6 +40,17 @@ private:
 	int m_mouse_start_x;
 	int m_mouse_start_y;
 
+	enum Tools
+	{
+		tLine,
+		tRect,
+		tPoint,
+		tEllipse
+	};
+
+	Tools tool;
+
+	int fill;
 public:
 	MyWindow(int, char*[]);
 
@@ -65,6 +67,8 @@ public:
 	void ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, Boolean * cont);
 
 	void BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data);
+	void BtnSetTool(Widget widget, XtPointer user_data, XtPointer call_data);
+	void BtnSetFill(Widget widget, XtPointer user_data, XtPointer call_data);
 
 	virtual ~MyWindow();
 };

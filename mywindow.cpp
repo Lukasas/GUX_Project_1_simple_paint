@@ -91,30 +91,92 @@ void MyWindow::InitComponents()
 
 
     m_btnColor = XtVaCreateManagedWidget(
-		"R",
+		"Red",
 		xmPushButtonWidgetClass,
 		m_rowColumn,
 		NULL
 	);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff0000);
 
-
     m_btnColor = XtVaCreateManagedWidget(
-		"G",
+		"Green",
 		xmPushButtonWidgetClass,
 		m_rowColumn,
 		NULL
 	);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff00);
 
-
     m_btnColor = XtVaCreateManagedWidget(
-		"B",
+		"Blue",
 		xmPushButtonWidgetClass,
 		m_rowColumn,
 		NULL
 	);
 	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xff);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Black",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0x0);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"White",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)0xffffff);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Line",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tLine);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Rect",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tRect);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Point",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tPoint);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Ellipse",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)Tools::tEllipse);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"Fill",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)1);
+
+    m_btnColor = XtVaCreateManagedWidget(
+		"No Fill",
+		xmPushButtonWidgetClass,
+		m_rowColumn,
+		NULL
+	);
+	c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)0);
 
     m_btnClear = XtVaCreateManagedWidget(
 		"Clear",
@@ -164,10 +226,29 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent * event, B
 {
 	int x = event->xmotion.x;
 	int y = event->xmotion.y;
-	// g->DrawPoint(x, y);
-	//g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
-	g->FillRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
-	//g->DrawRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
+
+	switch (tool)
+	{
+		case tLine:
+			g->DrawLine(m_mouse_start_x, m_mouse_start_y, x, y);
+		break;
+		case tRect:
+			if (fill)
+				g->FillRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
+			else
+				g->DrawRectangle(m_mouse_start_x, m_mouse_start_y, x, y);
+		break;
+		case tEllipse:
+			if (fill)
+				g->FillEllipse(m_mouse_start_x, m_mouse_start_y, x, y);
+			else
+				g->DrawEllipse(m_mouse_start_x, m_mouse_start_y, x, y);
+		break;
+		case tPoint:
+			g->DrawPoint(x, y);
+
+		break;
+	}
 }
 
 void MyWindow::BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data)
@@ -180,6 +261,20 @@ void MyWindow::BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call
 
 	g->SetPenColor(R, G, B);
 
+}
+
+void MyWindow::BtnSetTool(Widget widget, XtPointer user_data, XtPointer call_data)
+{
+	int *parser = (int*)user_data;
+	long long aa = (long long)parser;
+	tool = (Tools)aa;
+}
+
+void MyWindow::BtnSetFill(Widget widget, XtPointer user_data, XtPointer call_data)
+{
+	int *parser = (int*)user_data;
+	long long aa = (long long)parser;
+	fill = aa;
 }
 
 void MyWindow::ClearButton(Widget widget, XtPointer user_data, XtPointer call_data)
