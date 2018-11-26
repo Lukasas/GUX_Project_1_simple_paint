@@ -6,8 +6,6 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 	m_gc = XCreateGC(XtDisplay(w), RootWindowOfScreen(XtScreen(m_drawingArea)), 0, NULL);
 	m_colMap = DefaultColormapOfScreen(XtScreen(m_drawingArea));
 
-	m_c->RegisterCallback(this, m_drawingArea, XmNexposeCallback, &Drawing::MyExpose, NULL);
-	m_c->RegisterCallback(this, m_drawingArea, XmNresizeCallback, &Drawing::MyResize, NULL);
 
 
 	m_bmp = XCreatePixmap(XtDisplay (m_drawingArea),
@@ -19,7 +17,9 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
                             800, 600,
                             DefaultDepthOfScreen(XtScreen(m_drawingArea)));
 
-    /* clear pixmap with white */
+ 	m_c->RegisterCallback(this, m_drawingArea, XmNexposeCallback, &Drawing::MyExpose, NULL);
+	m_c->RegisterCallback(this, m_drawingArea, XmNresizeCallback, &Drawing::MyResize, NULL);
+   /* clear pixmap with white */
 
 	SetPenColor(0, 0, 0);
 
@@ -163,6 +163,17 @@ void Drawing::MyExpose(Widget widget, XtPointer user_data, XtPointer call_data)
 
 void Drawing::MyResize(Widget widget, XtPointer user_data, XtPointer call_data)
 {
+	/*XFreePixmap(XtDisplay(m_drawingArea), m_base);
+	XFreePixmap(XtDisplay(m_drawingArea), m_bmp);
+
+	m_bmp = XCreatePixmap(XtDisplay (m_drawingArea),
+                            RootWindowOfScreen(XtScreen(m_drawingArea)),
+                            800, 600,
+                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));
+	m_base = XCreatePixmap(XtDisplay (m_drawingArea),
+                            RootWindowOfScreen(XtScreen(m_drawingArea)),
+                            800, 600,
+                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));*/
 
 }
 
