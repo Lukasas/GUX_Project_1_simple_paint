@@ -2,6 +2,7 @@
 
 #include <Xm/DrawingA.h>
 #include <stack>
+#include <Xm/Protocols.h>
 
 template<typename T>
 class Controller
@@ -33,6 +34,7 @@ class Controller
 	virtual ~Controller();
 	void RegisterCallback(T * obj, Widget widget, String CallbackName, CallbackFn Function, XtPointer user_data);
 	void RegisterEventHandler(T * obj, Widget widget, EventMask event_mask, Boolean nonmaskable, EventHandlerFn, XtPointer user_data);
+	void RegisterWMProtocolCallback(T * obj, Widget widget, Atom protocol, CallbackFn, XtPointer closure);
 };
 
 template<typename T>
@@ -84,6 +86,18 @@ void Controller<T>::RegisterEventHandler(T * obj, Widget widget, EventMask event
 
 	m_Callbacks.push(data);
 	XtAddEventHandler(widget, event_mask, nonmaskable, EventCaller, (XtPointer)data);
+}
+
+template<typename T>
+void Controller<T>::RegisterWMProtocolCallback(T * obj, Widget widget, Atom protocol, CallbackFn Function, XtPointer user_data)
+{
+	EventHandlerData * data = new EventHandlerData();
+	data->obj = obj;
+	data->user_data = user_data;
+	data->fnCallback = Function;
+
+	m_Callbacks.push(data);
+	XmAddWMProtocolCallback(widget, protocol, CallbackCaller, (XtPointer)data);
 }
 
 template<typename T>

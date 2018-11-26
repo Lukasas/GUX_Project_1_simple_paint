@@ -5,6 +5,7 @@
  */
 #include <X11/Intrinsic.h>
 #include <Xm/Xm.h>
+#include <X11/Xmu/Editres.h>
 
 /*
  * Public include files for widgets used in this file.
@@ -14,6 +15,7 @@
 #include <Xm/Frame.h>
 #include <Xm/DrawingA.h>
 #include <Xm/RowColumn.h>
+#include <Xm/MessageB.h>
 
 #include <cstdlib>
 #include "drawing.h"
@@ -32,6 +34,9 @@ private:
 	Widget m_btnQuit;
 	Widget m_btnClear;
 	Widget m_btnColor;
+	Widget m_Question;
+
+	Atom WM_DELETE;
 
 	Drawing *g = NULL;
 	Controller<MyWindow> *c;
@@ -69,6 +74,9 @@ public:
 	void BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data);
 	void BtnSetTool(Widget widget, XtPointer user_data, XtPointer call_data);
 	void BtnSetFill(Widget widget, XtPointer user_data, XtPointer call_data);
+
+	void QuitDialogResult(Widget widget, XtPointer user_data, XtPointer call_data);
+	void QuitDialogShow(Widget widget, XtPointer user_data, XtPointer call_data);
 
 	virtual ~MyWindow();
 };
