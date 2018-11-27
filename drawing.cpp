@@ -1,6 +1,6 @@
 #include "drawing.h"
 
-Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
+Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>()), m_width(800), m_height(600)
 {
 	m_drawingArea = w;
 	m_gc = XCreateGC(XtDisplay(w), RootWindowOfScreen(XtScreen(m_drawingArea)), 0, NULL);
@@ -8,11 +8,11 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 
 	m_bmp = XCreatePixmap(XtDisplay(m_drawingArea),
 						  RootWindowOfScreen(XtScreen(m_drawingArea)),
-						  800, 600,
+						  m_width, m_height,
 						  DefaultDepthOfScreen(XtScreen(m_drawingArea)));
 	m_base = XCreatePixmap(XtDisplay(m_drawingArea),
 						   RootWindowOfScreen(XtScreen(m_drawingArea)),
-						   800, 600,
+						   m_width, m_height,
 						   DefaultDepthOfScreen(XtScreen(m_drawingArea)));
 
 	m_c->RegisterCallback(this, m_drawingArea, XmNexposeCallback, &Drawing::MyExpose, NULL);
@@ -21,9 +21,9 @@ Drawing::Drawing(Widget w) : m_c(new Controller<Drawing>())
 
 	SetPenColor(0, 0, 0);
 
-	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 0, 800, 600);
-	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, 800, 600);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, RootWindowOfScreen(XtScreen(m_drawingArea)), m_gc, 0, 0, 800, 600, 0, 0);
+	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, 0, 0, m_width, m_height);
+	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, m_width, m_height);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, RootWindowOfScreen(XtScreen(m_drawingArea)), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::SetLineWidthStyle(int line_width, int line_style)
@@ -83,15 +83,15 @@ void Drawing::SetBrushColor(float R, float G, float B)
 
 void Drawing::DrawLine(int x1, int y1, int x2, int y2)
 {
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
 	XDrawLine(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2, y2);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::DrawPoint(int x, int y)
 {
 	XDrawPoint(XtDisplay(m_drawingArea), m_bmp, m_gc, x, y);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::FixRectCoords(int &x1, int &y1, int &x2, int &y2)
@@ -114,24 +114,24 @@ void Drawing::FixRectCoords(int &x1, int &y1, int &x2, int &y2)
 
 void Drawing::DrawRectangle(int x1, int y1, int x2, int y2)
 {
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
 	// this buggs out on negative width and height
 	FixRectCoords(x1, y1, x2, y2);
 	XDrawRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::FillRectangle(int x1, int y1, int x2, int y2)
 {
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
 	FixRectCoords(x1, y1, x2, y2);
 	XFillRectangle(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::DrawEllipse(int x1, int y1, int x2, int y2)
 {
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
 	FixRectCoords(x1, y1, x2, y2);
 	int w = x2 - x1;
 	w /= 2;
@@ -141,13 +141,13 @@ void Drawing::DrawEllipse(int x1, int y1, int x2, int y2)
 	y1 -= h;
 	x2 += w;
 	y2 += h;
-	XDrawArc(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1, 1, 360 * 64);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XDrawArc(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1, 0, 360 * 64);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::FillEllipse(int x1, int y1, int x2, int y2)
 {
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
 	FixRectCoords(x1, y1, x2, y2);
 	int w = x2 - x1;
 	w /= 2;
@@ -158,16 +158,16 @@ void Drawing::FillEllipse(int x1, int y1, int x2, int y2)
 	x2 += w;
 	y2 += h;
 	XFillArc(XtDisplay(m_drawingArea), m_bmp, m_gc, x1, y1, x2 - x1, y2 - y1, 0, 360 * 64);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::Clear()
 {
 	float R = this->R, G = this->G, B = this->B;
 	SetPenColor(0, 0, 0);
-	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, 800, 600);
-	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, 800, 600, 0, 0);
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, 800, 600, 0, 0);
+	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, m_width, m_height);
+	XCopyArea(XtDisplay(m_drawingArea), m_base, m_bmp, m_gc, 0, 0, m_width, m_height, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, XtWindow(m_drawingArea), m_gc, 0, 0, m_width, m_height, 0, 0);
 	SetPenColor(R, G, B);
 }
 
@@ -175,27 +175,64 @@ void Drawing::ToolDone()
 {
 	// Copy m_bmp into m_base
 	// m_base will be the whole picture
-	XCopyArea(XtDisplay(m_drawingArea), m_bmp, m_base, m_gc, 0, 0, 800, 600, 0, 0);
+	XCopyArea(XtDisplay(m_drawingArea), m_bmp, m_base, m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::MyExpose(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	XCopyArea(XtDisplay(widget), m_base, XtWindow(widget), m_gc, 0, 0, 800, 600, 0, 0);
+	if (m_base)
+		XCopyArea(XtDisplay(widget), m_base, XtWindow(widget), m_gc, 0, 0, m_width, m_height, 0, 0);
+	else
+		XCopyArea(XtDisplay(widget), m_bmp, XtWindow(widget), m_gc, 0, 0, m_width, m_height, 0, 0);
 }
 
 void Drawing::MyResize(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	/*XFreePixmap(XtDisplay(m_drawingArea), m_base);
-	XFreePixmap(XtDisplay(m_drawingArea), m_bmp);
+	Dimension selW, selH;
 
-	m_bmp = XCreatePixmap(XtDisplay (m_drawingArea),
-                            RootWindowOfScreen(XtScreen(m_drawingArea)),
-                            800, 600,
-                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));
-	m_base = XCreatePixmap(XtDisplay (m_drawingArea),
-                            RootWindowOfScreen(XtScreen(m_drawingArea)),
-                            800, 600,
-                            DefaultDepthOfScreen(XtScreen(m_drawingArea)));*/
+	Dimension width, height;
+	XtVaGetValues(m_drawingArea,
+				  XmNwidth, &width,
+				  XmNheight, &height,
+				  NULL);
+
+	selW = width;
+	if (width >= m_width)
+		selW = m_width;
+
+	selH = height;
+	if (height >= m_height)
+		selH = m_height;
+
+	Pixmap temp  = XCreatePixmap(XtDisplay(m_drawingArea),
+						   RootWindowOfScreen(XtScreen(m_drawingArea)),
+						   selW, selH,
+						   DefaultDepthOfScreen(XtScreen(m_drawingArea)));
+
+	XCopyArea(XtDisplay(m_drawingArea), m_base, temp, m_gc, 0, 0, m_width, m_height, 0, 0);
+
+	XFreePixmap(XtDisplay(m_drawingArea), m_base);
+	m_base = XCreatePixmap(XtDisplay(m_drawingArea),
+						   RootWindowOfScreen(XtScreen(m_drawingArea)),
+						   width, height,
+						   DefaultDepthOfScreen(XtScreen(m_drawingArea)));
+	float R = this->R, G = this->G, B = this->B;
+	SetPenColor(0, 0, 0);
+	XFillRectangle(XtDisplay(m_drawingArea), m_base, m_gc, 0, 0, width, height);
+	SetPenColor(R, G, B);
+	XCopyArea(XtDisplay(m_drawingArea), temp, m_base, m_gc, 0, 0, selW, selH, 0, 0);
+
+	XFreePixmap(XtDisplay(m_drawingArea), m_bmp);
+	m_bmp = XCreatePixmap(XtDisplay(m_drawingArea),
+						  RootWindowOfScreen(XtScreen(m_drawingArea)),
+						  width, height,
+						  DefaultDepthOfScreen(XtScreen(m_drawingArea)));
+	XCopyArea(XtDisplay(m_drawingArea), temp, m_bmp, m_gc, 0, 0, selW, selH, 0, 0);
+	XFreePixmap(XtDisplay(m_drawingArea), temp);
+
+	m_width = width;
+	m_height = height;
+
 }
 
 Drawing::~Drawing()
