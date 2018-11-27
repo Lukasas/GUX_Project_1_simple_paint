@@ -7,7 +7,7 @@ CCOPTIONS=-O -Wall -lXmu -fno-builtin mywindow.cpp drawing.cpp
 CDEBUGFLAGS=-g
 LOCAL_LIBRARIES = XmClientLibs
 
-MSimpleProgramTarget(main)
+MSimpleProgramTarget(draw)
 clean::
 	$(RM) Makefile
 

@@ -18,11 +18,17 @@ private:
 	XColor m_xcol;
 	Colormap m_colMap;
 
+	float R, G, B;
+
 	void FixRectCoords(int &,int &,int &,int &);
 public:
 	Drawing(Widget);
 
+	void SetLineWidthStyle(int line_width, int line_style);
+
+	void SetPenColor(long long color);
 	void SetPenColor(float R, float G, float B);
+	void SetBrushColor(long long color);
 	void SetBrushColor(float R, float G, float B);
 	void DrawLine(int, int, int, int);
 	void DrawPoint(int, int);
