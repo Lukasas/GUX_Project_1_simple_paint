@@ -17,6 +17,8 @@
 #include <Xm/RowColumn.h>
 #include <Xm/Label.h>
 #include <Xm/MessageB.h>
+#include <Xm/MenuShell.h>
+#include <Xm/CascadeB.h>
 
 #include <cstdlib>
 #include <vector>
@@ -81,6 +83,17 @@ private:
 	Widget m_btnColor;
 	Widget m_Question;
 	Widget m_Label;
+	Widget m_topBar;
+	Widget m_fileShell;
+	Widget m_fileMenu;
+	Widget m_menuFile;
+	Widget m_menuOpen;
+	Widget m_colorsMenu;
+	Widget m_backColorsMenu;
+	Widget m_toolsMenu;
+	Widget m_fillMenu;
+	Widget m_sizeMenu;
+	Widget m_styleMenu;
 
 	Atom WM_DELETE;
 
@@ -90,6 +103,7 @@ private:
 	int m_mouse_start_x;
 	int m_mouse_start_y;
 
+	void CreateMenu();
 
 public:
 	MyWindow(int, char*[]);

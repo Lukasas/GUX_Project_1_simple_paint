@@ -34,6 +34,13 @@ MyWindow::MyWindow(int argc, char *argv[]) : m_c(new Controller<MyWindow>())
 		"*question.okLabelString: Yes",
 		"*question.cancelLabelString: No",
 		"*question.messageAlignment: XmALIGNMENT_CENTER",
+		"*bar.file.labelString: File",
+		"*bar.color.labelString: Colors",
+		"*bar.backcolor.labelString: Back Colors",
+		"*bar.tools.labelString: Tools",
+		"*bar.fill.labelString: Fill",
+		"*bar.size.labelString: Sizes",
+		"*bar.style.labelString: Styles",
 		0};
 
 	m_topLevel = XtVaAppInitialize(
@@ -70,6 +77,8 @@ MyWindow::MyWindow(int argc, char *argv[]) : m_c(new Controller<MyWindow>())
 		XmNheight, 600,
 		NULL);
 
+	CreateMenu();
+
 	WM_DELETE = XInternAtom(XtDisplay(m_topLevel), "WM_DELETE_WINDOW", False);
 	m_c->RegisterWMProtocolCallback(this, m_topLevel, WM_DELETE, &MyWindow::QuitDialogShow, NULL);
 	XmActivateWMProtocol(m_topLevel, WM_DELETE);
@@ -87,6 +96,150 @@ void MyWindow::RunLoop()
 {
 	XtRealizeWidget(m_topLevel);
 	XtAppMainLoop(m_appContext);
+}
+
+void MyWindow::CreateMenu()
+{
+	m_topBar = XtVaCreateManagedWidget(
+		"bar",
+		xmRowColumnWidgetClass,
+		m_mainWindow,
+		XmNrowColumnType,
+		XmMENU_BAR,
+		NULL);
+
+	m_fileShell = XtVaCreatePopupShell(
+		"file_shell",
+		xmMenuShellWidgetClass,
+		m_topBar,
+		XmNwidth, 5,
+		XmNheight, 5,
+		XmNallowShellResize,
+		True,
+		XtNoverrideRedirect,
+		True,
+		NULL);
+
+	m_fileMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+
+	m_menuFile = XtVaCreateManagedWidget(
+		"file",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_fileMenu,
+		NULL);
+
+	m_colorsMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"color",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_colorsMenu,
+		NULL);
+
+	m_backColorsMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"backcolor",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_backColorsMenu,
+		NULL);
+
+	m_toolsMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"tools",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_toolsMenu,
+		NULL);
+
+	m_fillMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"fill",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_fillMenu,
+		NULL);
+
+	m_sizeMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"size",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_sizeMenu,
+		NULL);
+
+	m_styleMenu = XtVaCreateWidget(
+		"file_menu",
+		xmRowColumnWidgetClass,
+		m_fileShell,
+		XmNrowColumnType,
+		XmMENU_PULLDOWN,
+		NULL);
+	m_menuFile = XtVaCreateManagedWidget(
+		"style",
+		xmCascadeButtonWidgetClass,
+		m_topBar,
+		XmNsubMenuId,
+		m_styleMenu,
+		NULL);
+
+	m_menuOpen = XtVaCreateManagedWidget(
+		"Clear",
+		xmPushButtonWidgetClass,
+		m_fileMenu,
+		NULL);
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::ClearButton, (XtPointer)0);
+
+	m_menuOpen = XtVaCreateManagedWidget(
+		"Quit",
+		xmPushButtonWidgetClass,
+		m_fileMenu,
+		NULL);
+
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::QuitDialogShow, (XtPointer)0);
 }
 
 MyWindow::~MyWindow()
@@ -209,13 +362,12 @@ void MyWindow::InitComponents()
 		XmNpacking, XmPACK_COLUMN,
 		NULL);
 
-
 	m_Label = XtVaCreateManagedWidget(
 		"label",
 		xmLabelWidgetClass,
 		m_rowColumn_1_colors,
 		NULL);
-	XmString Output = XmStringCreate((char*)"Color: ", XmFONTLIST_DEFAULT_TAG);
+	XmString Output = XmStringCreate((char *)"Color: ", XmFONTLIST_DEFAULT_TAG);
 	XtVaSetValues(m_Label, XmNlabelString, Output, NULL);
 	XmStringFree(Output);
 
@@ -224,7 +376,7 @@ void MyWindow::InitComponents()
 		xmLabelWidgetClass,
 		m_rowColumn_1_bkcolors,
 		NULL);
-	Output = XmStringCreate((char*)"Back Color: ", XmFONTLIST_DEFAULT_TAG);
+	Output = XmStringCreate((char *)"Back Color: ", XmFONTLIST_DEFAULT_TAG);
 	XtVaSetValues(m_Label, XmNlabelString, Output, NULL);
 	XmStringFree(Output);
 
@@ -242,6 +394,13 @@ void MyWindow::InitComponents()
 			m_rowColumn_1_colors,
 			NULL);
 		m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)i);
+
+		m_menuOpen = XtVaCreateManagedWidget(
+			m_Colors[i]->colorname,
+			xmPushButtonWidgetClass,
+			m_colorsMenu,
+			NULL);
+		m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnChangeColor, (XtPointer)i);
 	}
 
 	for (unsigned long long i = 0; i < m_Colors.size(); i++)
@@ -252,6 +411,13 @@ void MyWindow::InitComponents()
 			m_rowColumn_1_bkcolors,
 			NULL);
 		m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnChangeBkColor, (XtPointer)i);
+
+		m_menuOpen = XtVaCreateManagedWidget(
+			m_Colors[i]->colorname,
+			xmPushButtonWidgetClass,
+			m_backColorsMenu,
+			NULL);
+		m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnChangeBkColor, (XtPointer)i);
 	}
 
 	for (unsigned long long i = 0; i < m_ToolsSel.size(); i++)
@@ -262,6 +428,13 @@ void MyWindow::InitComponents()
 			m_rowColumn_2_tools,
 			NULL);
 		m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)i);
+
+		m_menuOpen = XtVaCreateManagedWidget(
+			m_ToolsSel[i]->colorname,
+			xmPushButtonWidgetClass,
+			m_toolsMenu,
+			NULL);
+		m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetTool, (XtPointer)i);
 	}
 
 	m_btnColor = XtVaCreateManagedWidget(
@@ -271,12 +444,26 @@ void MyWindow::InitComponents()
 		NULL);
 	m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)1);
 
+	m_menuOpen = XtVaCreateManagedWidget(
+		"Fill",
+		xmPushButtonWidgetClass,
+		m_fillMenu,
+		NULL);
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)1);
+
 	m_btnColor = XtVaCreateManagedWidget(
 		"No Fill",
 		xmPushButtonWidgetClass,
 		m_rowColumn_2_tools,
 		NULL);
 	m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)0);
+
+	m_menuOpen = XtVaCreateManagedWidget(
+		"No Fill",
+		xmPushButtonWidgetClass,
+		m_fillMenu,
+		NULL);
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetFill, (XtPointer)0);
 
 	m_btnColor = XtVaCreateManagedWidget(
 		"Solid",
@@ -285,12 +472,26 @@ void MyWindow::InitComponents()
 		NULL);
 	m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetLineStyle, (XtPointer)LineSolid);
 
+	m_menuOpen = XtVaCreateManagedWidget(
+		"Solid",
+		xmPushButtonWidgetClass,
+		m_styleMenu,
+		NULL);
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetLineStyle, (XtPointer)LineSolid);
+
 	m_btnColor = XtVaCreateManagedWidget(
 		"DoubleDash",
 		xmPushButtonWidgetClass,
 		m_rowColumn_2_tools,
 		NULL);
 	m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetLineStyle, (XtPointer)LineDoubleDash);
+
+	m_menuOpen = XtVaCreateManagedWidget(
+		"DoubleDash",
+		xmPushButtonWidgetClass,
+		m_styleMenu,
+		NULL);
+	m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetLineStyle, (XtPointer)LineDoubleDash);
 
 	for (unsigned long long i = 0; i < m_LineSizes.size(); i++)
 	{
@@ -300,6 +501,14 @@ void MyWindow::InitComponents()
 			m_rowColumn_3_line_size,
 			NULL);
 		m_c->RegisterCallback(this, m_btnColor, XmNactivateCallback, &MyWindow::BtnSetLineSize, (XtPointer)i);
+
+		m_menuOpen = XtVaCreateManagedWidget(
+			m_LineSizes[i]->colorname,
+			xmPushButtonWidgetClass,
+			m_sizeMenu,
+			NULL);
+		m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetLineSize, (XtPointer)i);
+
 	}
 
 	m_btnClear = XtVaCreateManagedWidget(
