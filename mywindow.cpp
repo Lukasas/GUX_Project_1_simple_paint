@@ -546,7 +546,14 @@ void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call
 			m_mouse_start_y = be->y;
 			if (Current.Tool == Tools::tPoint)
 			{
-				m_g->DrawPoint(m_mouse_start_x, m_mouse_start_y);
+				if (Current.Size > 0)
+				{
+					int fixS = (m_LineSizes[Current.Size]->colorvalue / 4);
+					m_g->FillEllipse(m_mouse_start_x - fixS, m_mouse_start_y - fixS, m_mouse_start_x + fixS, m_mouse_start_y + fixS);
+					m_g->ToolDone();
+				}
+				else
+					m_g->DrawPoint(m_mouse_start_x, m_mouse_start_y);
 			}
 		}
 
@@ -580,7 +587,8 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent *event, Bo
 	case tPoint:
 		if (Current.Size > 0)
 		{
-			m_g->FillEllipse(x, y, x + (m_LineSizes[Current.Size]->colorvalue / 2), y + (m_LineSizes[Current.Size]->colorvalue / 2));
+			int fixS = (m_LineSizes[Current.Size]->colorvalue / 4);
+			m_g->FillEllipse(x - fixS, y - fixS, x + fixS, y + fixS);
 			m_g->ToolDone();
 		}
 		else
