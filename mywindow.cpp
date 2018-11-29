@@ -508,7 +508,6 @@ void MyWindow::InitComponents()
 			m_sizeMenu,
 			NULL);
 		m_c->RegisterCallback(this, m_menuOpen, XmNactivateCallback, &MyWindow::BtnSetLineSize, (XtPointer)i);
-
 	}
 
 	m_btnClear = XtVaCreateManagedWidget(
@@ -545,6 +544,10 @@ void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call
 		{
 			m_mouse_start_x = be->x,
 			m_mouse_start_y = be->y;
+			if (Current.Tool == Tools::tPoint)
+			{
+				m_g->DrawPoint(m_mouse_start_x, m_mouse_start_y);
+			}
 		}
 
 		if (be->type == ButtonRelease)
@@ -575,7 +578,13 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent *event, Bo
 			m_g->DrawEllipse(m_mouse_start_x, m_mouse_start_y, x, y);
 		break;
 	case tPoint:
-		m_g->DrawPoint(x, y);
+		if (Current.Size > 0)
+		{
+			m_g->FillEllipse(x, y, x + (m_LineSizes[Current.Size]->colorvalue / 2), y + (m_LineSizes[Current.Size]->colorvalue / 2));
+			m_g->ToolDone();
+		}
+		else
+			m_g->DrawPoint(x, y);
 
 		break;
 	}
