@@ -600,51 +600,39 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent *event, Bo
 
 void MyWindow::BtnChangeColor(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.Color = aa;
+	Current.Color = (long long)((int *)user_data);
 	m_g->SetPenColor(m_Colors[Current.Color]->colorvalue);
 	StatusChange();
 }
 void MyWindow::BtnChangeBkColor(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.BkColor = aa;
+	Current.BkColor = (long long)((int *)user_data);
 	m_g->SetBrushColor(m_Colors[Current.BkColor]->colorvalue);
 	StatusChange();
 }
 
 void MyWindow::BtnSetTool(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.Tool = (Tools)aa;
+	Current.Tool = (Tools)((long long)((int *)user_data));
 	StatusChange();
 }
 
 void MyWindow::BtnSetFill(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.Fill = aa;
+	Current.Fill = (long long)((int *)user_data);
 	StatusChange();
 }
 
 void MyWindow::BtnSetLineSize(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.Size = aa;
+	Current.Size = (long long)((int *)user_data);
 	m_g->SetLineWidthStyle(m_LineSizes[Current.Size]->colorvalue, Current.Style);
 	StatusChange();
 }
 
 void MyWindow::BtnSetLineStyle(Widget widget, XtPointer user_data, XtPointer call_data)
 {
-	int *parser = (int *)user_data;
-	long long aa = (long long)parser;
-	Current.Style = aa;
+	Current.Style = (long long)((int *)user_data);
 	m_g->SetLineWidthStyle(m_LineSizes[Current.Size]->colorvalue, Current.Style);
 	StatusChange();
 }
