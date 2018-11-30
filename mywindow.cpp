@@ -548,8 +548,8 @@ void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call
 			{
 				if (Current.Size > 0)
 				{
-					int fixS = (m_LineSizes[Current.Size]->colorvalue / 4);
-					m_g->FillEllipse(m_mouse_start_x - fixS, m_mouse_start_y - fixS, m_mouse_start_x + fixS, m_mouse_start_y + fixS);
+					float fixS = (m_LineSizes[Current.Size]->colorvalue / 2);
+					m_g->FillEllipse(floor((m_mouse_start_x) - fixS), floor(m_mouse_start_y - fixS), ceil(m_mouse_start_x + fixS), ceil(m_mouse_start_y + fixS));
 					m_g->ToolDone();
 				}
 				else
@@ -564,8 +564,8 @@ void MyWindow::ButtonCallTest(Widget widget, XtPointer user_data, XtPointer call
 
 void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent *event, Boolean *cont)
 {
-	int x = event->xmotion.x;
-	int y = event->xmotion.y;
+	float x = event->xmotion.x;
+	float y = event->xmotion.y;
 
 	switch (m_ToolsSel[Current.Tool]->colorvalue)
 	{
@@ -585,10 +585,11 @@ void MyWindow::ButtonEvent(Widget widget, XtPointer user_data, XEvent *event, Bo
 			m_g->DrawEllipse(m_mouse_start_x, m_mouse_start_y, x, y);
 		break;
 	case tPoint:
-		if (Current.Size > 0)
+		if (Current.Size > 1)
 		{
-			int fixS = (m_LineSizes[Current.Size]->colorvalue / 4);
-			m_g->FillEllipse(x - fixS, y - fixS, x + fixS, y + fixS);
+			float fixS = (m_LineSizes[Current.Size]->colorvalue / 2);
+			m_g->FillEllipse(floor(x - fixS), floor(y - fixS), ceil(x + fixS), ceil(y + fixS));
+
 			m_g->ToolDone();
 		}
 		else

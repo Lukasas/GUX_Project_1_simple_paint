@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include <cmath>
 #include "drawing.h"
 
 class MyWindow
